@@ -14,6 +14,3 @@ exampleModal.addEventListener("show.bs.modal", function (event) {
 
   //   modalBodyInput.value = recipient;
 });
-// var url = new URL("http://localhost:3000/?id=");
-// url.searchParams.set("id", 42);
-// window.location = url.href;
