@@ -1,7 +1,8 @@
 <% layout('/layout/body')  %> 
-<h1>EditPost</h1>
-<div class="row">
-    <div class="col-6 offset-3">
+<div class="row mt-4">
+    <div class="card offset-3 col-6">
+    <div class=" card-body">
+        <h2>EditPost</h2>
         <form class="validated-form" action="/show/<%= post._id %>?_method=PUT" method="POST" novalidate>
             <div class="mb-3 ">
                 <label class="form-label" for="title">Title</label>
@@ -15,4 +16,5 @@
             <button type="submit" class="btn btn-primary">Edit</button>
           </form>
     </div>
+</div>
 </div>
