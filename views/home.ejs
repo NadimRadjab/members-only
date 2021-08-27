@@ -1,0 +1,28 @@
+<% layout('/layout/body')  %> 
+<div class="row offset-1">
+    <div class="col-6">
+        <% for(let post of posts) {%> 
+            <div class="card m-2">
+                <div class="card-body">
+                  <h5 class="card-title"><%= post.title %> </h5>
+                  <p class="card-text"><%= post.text %> </p>
+                  <% if(!currentUser){ %> 
+                    <p class="card-text">Made By: Anonymous</p>
+                    <% }else{  %>
+                        <p class="card-text">Made By: <%= post.author.username %> </p>
+                    <% }%> 
+                  
+                  <p class="card-text">Posted on: <%= post.createdAt.toUTCString() %> </p>
+                  <% if(currentUser && post.author.equals(currentUser._id)) {%> 
+                  <a href="/show/<%= post._id %>"   class="btn btn-primary" >
+                    View
+                   </a>
+                   <% } %> 
+                 
+                </div>
+              </div>
+            <% } %> 
+    </div>
+</div>
+
+
