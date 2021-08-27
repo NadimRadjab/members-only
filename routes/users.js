@@ -10,11 +10,18 @@ router.get("/register", (req, res) => {
 router.post(
   "/register",
   catchAsync(async (req, res) => {
-    const { username, email, password } = req.body;
-    const user = new User({ username, email });
-    const registerdUser = await User.register(user, password);
-    req.flash("success", "Successfully registerd!");
-    res.redirect("/");
+    try {
+      const { username, email, password } = req.body;
+      const user = new User({ username, email });
+      const registerdUser = await User.register(user, password);
+      req.login(registerdUser, (err) => {
+        if (err) return next(err);
+        req.flash("success", "Successfully registerd");
+        res.redirect("/");
+      });
+    } catch (e) {
+      res.redirect("/users/register");
+    }
   })
 );
 router.get("/login", (req, res) => {
@@ -25,7 +32,7 @@ router.post(
   passport.authenticate("local", {
     successFlash: ("success", "Successfully sigend in!"),
     successRedirect: "/",
-    failureFlash: ("error", "Try again!"),
+    failureFlash: true,
     failureRedirect: "/users/login",
   })
 );

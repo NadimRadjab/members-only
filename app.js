@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -11,8 +15,9 @@ const User = require("./models/users");
 var flash = require("connect-flash");
 const homeRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
+const MongoStore = require("connect-mongo");
 
-const dbUrl = "mongodb://localhost:27017/members-only";
+const dbUrl = process.env.DB;
 
 mongoose.connect(dbUrl, {
   useUnifiedTopology: true,
@@ -34,10 +39,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+const secret = process.env.SECRET;
+const store = new MongoStore({
+  mongoUrl: dbUrl,
+  secret: secret,
+  touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+  console.log("Session Store Error", e);
+});
 const sessionConfig = {
+  store,
   name: "session",
-  secret: "secret",
-  resave: "false",
+  secret,
+  resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
@@ -73,6 +89,8 @@ app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Somthing Went Wrong!" } = err;
   res.status(statusCode).render("error", { err });
 });
-app.listen(3000, () => {
-  console.log("app listening on port 3000");
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Port ${port}`);
 });
