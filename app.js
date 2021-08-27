@@ -16,6 +16,7 @@ var flash = require("connect-flash");
 const homeRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 const MongoStore = require("connect-mongo");
+const mongoSanitize = require("express-mongo-sanitize");
 
 const dbUrl = process.env.DB;
 
@@ -66,6 +67,7 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(mongoSanitize());
 app.use(flash());
 passport.use(new localPassport(User.authenticate()));
 passport.serializeUser(User.serializeUser());
